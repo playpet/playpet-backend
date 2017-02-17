@@ -1,11 +1,13 @@
-global.__base = __dirname;
-
 let express = require('express'),
-    app = express(),
-    autoloader = require('autoloader')(app)
+	app = express(),
+	autoloader = require('autoloader')(app),
+	options = {
+		debug: process.env.NODE_ENV && process.env.NODE_ENV !== 'production'
+	},
+  port = 3000
 
-console.log(process.env.NODE_ENV);
+console.log('app config options: ', options)
 
-app.listen(3000, {debug: process.env.NODE_ENV && process.env.NODE_ENV !== 'production' || false})
+app.listen(port, options)
 
-console.log('Server is listening...')
+console.log(`Server is listening on ${port}`)

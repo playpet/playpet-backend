@@ -4,9 +4,8 @@ module.exports = function(app) {
 
   config.loadPaths.forEach(function(path) {
     glob(path, function(err, matches) {
-      if (!err && matches && matches.constructor === Array && matches.length) {
+      if (!err && matches && matches.length) {
         matches.forEach(function(filename) {
-          console.log(path, filename);
           require(filename)(app)
         })
       }
