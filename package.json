@@ -1,0 +1,39 @@
+{
+  "name": "playpet-backend",
+  "version": "0.5.0",
+  "description": "Backend for PlayPet extension",
+  "main": "app.js",
+  "scripts": {
+    "start": "chmod 755 app.sh && ./app.sh",
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/playpet/playpet-backend.git"
+  },
+  "keywords": [
+    "tamagochi",
+    "extension",
+    "chrome",
+    "nodejs",
+    "hackathon"
+  ],
+  "author": "Chen Asraf <chen@asraf.me>",
+  "license": "",
+  "bugs": {
+    "url": "https://github.com/playpet/playpet-backend/issues"
+  },
+  "homepage": "https://github.com/playpet/playpet-backend#readme",
+  "private": true,
+  "dependencies": {
+    "express": "^4.14.1",
+    "glob": "^7.1.1",
+    "gulp": "^3.9.1",
+    "passport": "^0.3.2",
+    "passport-google-oauth": "^1.0.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.22.2",
+    "babel-preset-es2017": "^6.22.0"
+  }
+}
