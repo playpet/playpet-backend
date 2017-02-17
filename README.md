@@ -1,6 +1,6 @@
 # playpet-backend
 
-Node.js backend for [PlayPet Extesion](https://github.complaypet/playpet-extension).
+Node.js backend for [PlayPet Extesion](https://github.com/playpet/playpet-extension).
 
 # Install
 1. Install Node.js
