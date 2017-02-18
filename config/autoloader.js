@@ -2,15 +2,18 @@ const path = require('path')
 let config = {
   prependFiles: [
     './src/init/access-log.js',
+    './src/init/db.js',
   ],
 	prependPaths: [
 		'./src/init/**/*.js',
-		'./src/controllers/**/*.js',
 	],
   appendFiles: [
     './src/init/error-handling.js',
   ],
-  appendPaths: [],
+  appendPaths: [
+    './src/mdoels/**/*.js',
+    './src/controllers/**/*.js',
+  ],
 }
 
 for (key in config) {
