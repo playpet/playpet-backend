@@ -1,8 +1,20 @@
-let passport = require('passport')
+const passport = require('passport')
+
+function signup(req, res) {
+	res.json({
+		status: 'ok'
+	})
+}
 
 module.exports = function (app) {
 	app.get('/login', function (req, res) {
-		res.send('<a href="/auth/google">/auth/google</a><br><a href="/auth/github">/auth/github</a>')
+    let auths = ['google', 'github'],
+      links = []
+
+    auths.forEach(function(auth) {
+      links.push(`<a href="/auth/${auth}" target="_blank">${auth}</a>`)
+    })
+		res.send(links.join('<br />'))
 	})
 
 	app.get('/auth/google', passport.authenticate('google', {
@@ -15,17 +27,9 @@ module.exports = function (app) {
 
 	app.get('/auth/google/callback', passport.authenticate('google', {
 		failureRedirect: '/login'
-	}), function (req, res) {
-		res.json({
-			status: 'ok'
-		})
-	})
+	}), signup)
 
-	app.get('/auth/github/callback', passport.authenticate('google', {
+	app.get('/auth/github/callback', passport.authenticate('github', {
 		failureRedirect: '/login'
-	}), function (req, res) {
-		res.json({
-			status: 'ok'
-		})
-	})
+	}), signup)
 }

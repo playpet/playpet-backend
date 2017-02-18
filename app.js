@@ -1,4 +1,4 @@
-let express = require('express'),
+const express = require('express'),
 	app = express(),
 	autoloader = require('autoloader')(app),
 	options = {
@@ -6,8 +6,8 @@ let express = require('express'),
 	},
   port = 3000
 
-console.log('app config options: ', options)
+bc.log('app config options: ', options)
 
 app.listen(port, options)
 
-console.log(`Server is listening on ${port}`)
+bc.log(`Server is listening on ${port}`)

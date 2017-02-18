@@ -1,11 +1,20 @@
-let path = require('path')
-
-module.exports = {
-  loadFiles: [
-    path.resolve('./src/lib/passport.js')
+const path = require('path')
+let config = {
+  prependFiles: [
+    './src/init/access-log.js',
   ],
-	loadPaths: [
-		path.resolve('./src/lib/**/*.js'),
-		path.resolve('./src/controllers/**/*.js'),
-	]
+	prependPaths: [
+		'./src/init/**/*.js',
+		'./src/controllers/**/*.js',
+	],
+  appendFiles: [
+    './src/init/error-handling.js',
+  ],
+  appendPaths: [],
 }
+
+for (key in config) {
+  config[key] = config[key].map(f => path.resolve(f))
+}
+
+module.exports = config
