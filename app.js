@@ -1,10 +1,17 @@
 const express = require('express'),
 	app = express(),
-	autoloader = require('autoloader')(app),
+	autoloader = require('autoloader'),
 	options = {
 		debug: process.env.NODE_ENV && process.env.NODE_ENV !== 'production'
 	},
-  port = 3000
+  port = 3000,
+  bc = require('better-console')
+
+autoloader.autoload(app, [
+  './src/lib/morgan.js',
+  './src/controllers/*.js',
+  './src/lib/oauth.js',
+])
 
 bc.log('app config options: ', options)
 

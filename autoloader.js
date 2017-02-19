@@ -1,20 +1,18 @@
-module.exports = function (app) {
-	const glob = require('glob'),
-		config = require('config/autoloader')
+const glob = require('glob')
 
-	let loaded = []
+class Autoloader {
+  constructor() {
+    this.loaded = []
+  }
 
-	function loadFile(filename) {
-		if (loaded.indexOf(filename) < 0) {
-			loaded.push(filename)
-			let fn = require(filename)
-			if (typeof fn === 'function') {
-				fn(app)
-			}
+	loadFile(filename, ...args) {
+		let fn = require(filename)
+		if (typeof fn === 'function') {
+			fn(...args)
 		}
 	}
 
-	function loadDir(dir, cb) {
+	loadDir(dir, cb) {
 		glob(dir, function (err, matches) {
 			if (!err && matches && matches.length) {
 				matches.forEach(cb)
@@ -22,12 +20,21 @@ module.exports = function (app) {
 		})
 	}
 
-	config.prependFiles.forEach(loadFile)
-	config.prependPaths.forEach(function (dir) {
-		loadDir(dir, loadFile)
-	})
-	config.appendFiles.forEach(loadFile)
-	config.appendPaths.forEach(function (dir) {
-		loadDir(dir, loadFile)
-	})
+	autoload(app, globArr) {
+		globArr.forEach((dir) => {
+			this.loadDir(dir, filename => {
+        this.loadFile(filename, app)
+      })
+		})
+    return true
+	}
+
+	_loadFile(filename) {
+		if (this.loaded.indexOf(filename) < 0) {
+			this.loadFile(filename)
+			this.loaded.push(filename)
+		}
+	}
 }
+
+module.exports = new Autoloader()

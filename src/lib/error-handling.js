@@ -1,4 +1,5 @@
-const pe = require('pretty-error').start()
+const //pe = require('pretty-error').start(),
+  bc = require('better-console')
 
 module.exports = function (app) {
 	app.use(function (err, req, res, next) {
