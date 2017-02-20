@@ -15,7 +15,7 @@ class Autoloader {
 	}
 
 	loadDir(dir, cb) {
-		glob(dir, function (err, matches) {
+		glob(dir, (err, matches) => {
 			if (!err && matches && matches.length) {
 				matches.forEach(cb)
 			}

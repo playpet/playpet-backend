@@ -6,12 +6,12 @@ function signup(req, res) {
 	})
 }
 
-module.exports = function (app) {
-	app.get('/login', function (req, res) {
+module.exports =  (app) => {
+	app.get('/login',  (req, res) => {
     let auths = ['google', 'github'],
       links = []
 
-    auths.forEach(function(auth) {
+    auths.forEach((auth) => {
       links.push(`<a href="/auth/${auth}" target="_blank">${auth}</a>`)
     })
 		res.send(links.join('<br />'))
@@ -32,4 +32,10 @@ module.exports = function (app) {
 	app.get('/auth/github/callback', passport.authenticate('github', {
 		failureRedirect: '/login'
 	}), signup)
+
+  app.get('/dologin', (req, res) => {
+    req.login(function(err, user) {
+      req.json(user)
+    })
+  })
 }

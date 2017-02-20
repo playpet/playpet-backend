@@ -1,8 +1,8 @@
 const User = require('src/models/user')
 
-module.exports = function (app) {
-	app.get('/users', function (req, res) {
-		User.find(function (err, users) {
+module.exports = (app) => {
+	app.get('/users', (req, res) => {
+		User.find((err, users) => {
 			res.json(users.map(user => {
 				return {
 					name: user.name,

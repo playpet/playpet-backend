@@ -8,11 +8,11 @@ mongoose.connect('mongodb://localhost:27017/playpet')
 
 let db = mongoose.connection
 
-db.on('error', function() {
+db.on('error', () => {
   db.error(...arguments)
 })
 
-db.once('open', function () {
+db.once('open',  () => {
   bc.log('MongoDB connected at mongodb://localhost/playpet')
 })
 

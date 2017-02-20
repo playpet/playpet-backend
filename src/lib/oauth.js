@@ -15,16 +15,15 @@ passport.use(new GoogleStrategy({
 	clientID: secrets.google_oauth_key,
 	clientSecret: secrets.google_oauth_secret,
 	callbackURL: authURL('google'),
-}, function (accessToken, refreshToken, profile, done) {
+}, (accessToken, refreshToken, profile, done) => {
 	bc.log('authenticated, saving')
 
 	User.findOne({
 		'profiles.google.data.id': profile.id
 	}, (err, user) => {
-		bc.log('after findOne', ...arguments)
 		if (err) {
 			bc.error(err)
-			done(err)
+			return done(err)
 		}
 
 		if (user) {
@@ -43,13 +42,11 @@ passport.use(new GoogleStrategy({
 					}
 				},
 			})
-			bc.log('new user', user)
 			user.save((err) => {
 				if (err) {
 					return done(err)
 				}
-				done(null, user)
-				bc.log('user saved', user)
+				return done(null, user)
 			})
 		}
 	})
@@ -59,44 +56,45 @@ passport.use(new GitHubStrategy({
 	clientID: secrets.github_oauth_key,
 	clientSecret: secrets.github_oauth_secret,
 	callbackURL: authURL('github'),
-}, function (accessToken, refreshToken, profile, done) {
-	bc.log('after findOne', ...arguments)
-	if (err) {
-		bc.error(err)
-		done(err)
-	}
+}, (accessToken, refreshToken, profile, done) => {
+	User.findOne({
+			'profiles.google.data.id': profile.id
+		}, (err, user) =>
+		if (err) {
+			bc.error(err)
+			return done(err)
+		}
 
-	if (user) {
-		bc.log('user found,', user)
-	} else {
-		let user = new User({
-			name: profile.displayName,
-			// TODO: make fallbacks for these, check their specs
-			email: profile.emails[0].value,
-			profileImage: profile._json.avatar_url,
-			profiles: {
-				github: {
-					data: profile,
-					accessToken,
-					refreshToken,
+		if (user) {
+			bc.log('user found,', user)
+		} else {
+			let user = new User({
+				name: profile.displayName,
+				// TODO: make fallbacks for these, check their specs
+				email: profile.emails[0].value,
+				profileImage: profile._json.avatar_url,
+				profiles: {
+					github: {
+						data: profile,
+						accessToken,
+						refreshToken,
+					}
+				},
+			})
+			user.save((err) => {
+				if (err) {
+					return done(err)
 				}
-			},
-		})
-		bc.log('new user', user)
-		user.save((err) => {
-			if (err) {
-				return done(err)
-			}
-			done(null, user)
-			bc.log('user saved', user)
-		})
+				return done(null, user)
+			})
+		}
 	}
 }))
 
 passport.serializeUser(function (user, done) {
-	done(null, user)
+	return done(null, user)
 })
 
 passport.deserializeUser(function (user, done) {
-	done(null, user)
+	return done(null, user)
 })
