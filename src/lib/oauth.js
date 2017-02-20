@@ -2,7 +2,10 @@ const secrets = require('secrets'),
 	passport = require('passport'),
 	GoogleStrategy = require('passport-google-oauth').OAuth2Strategy,
 	GitHubStrategy = require('passport-github2'),
-	User = require('src/models/user')
+	User = require('src/models/user'),
+	bc = require('better-console'),
+	mongoose = require('mongoose'),
+	db = require('src/lib/db')
 
 function authURL(name) {
 	return `http://localhost:3000/auth/${name}/callback`
@@ -13,11 +16,21 @@ passport.use(new GoogleStrategy({
 	clientSecret: secrets.google_oauth_secret,
 	callbackURL: authURL('google'),
 }, function (accessToken, refreshToken, profile, done) {
+	bc.log('authenticated, saving')
+
 	User.findOne({
-		'profiles.google.id': profile.id
-	}, (err, profile) => {
+		'profiles.google.data.id': profile.id
+	}, (err, user) => {
+		bc.log('after findOne', ...arguments)
 		if (err) {
-			let user = new User({
+			bc.error(err)
+			done(err)
+		}
+
+		if (user) {
+      bc.log('user found,', user)
+    } else {
+			user = new User({
 				name: profile.displayName,
 				// TODO: make fallbacks for these, check their specs
 				email: profile.emails.find(e => e.type == 'account').value,
@@ -30,15 +43,14 @@ passport.use(new GoogleStrategy({
 					}
 				},
 			})
+			bc.log('new user', user)
 			user.save((err) => {
 				if (err) {
 					return done(err)
 				}
 				done(null, user)
+				bc.log('user saved', user)
 			})
-		} else {
-			console.error(err)
-			done(err)
 		}
 	})
 }))
@@ -48,10 +60,15 @@ passport.use(new GitHubStrategy({
 	clientSecret: secrets.github_oauth_secret,
 	callbackURL: authURL('github'),
 }, function (accessToken, refreshToken, profile, done) {
-	User.findOne({
-		'profiles.github.id': profile.id
-	}, (err, profile) => {
-		if (err) {
+  bc.log('after findOne', ...arguments)
+  if (err) {
+    bc.error(err)
+    done(err)
+  }
+
+  if (user) {
+    bc.log('user found,', user)
+  } else {
 			let user = new User({
 				name: profile.displayName,
 				// TODO: make fallbacks for these, check their specs
@@ -65,15 +82,14 @@ passport.use(new GitHubStrategy({
 					}
 				},
 			})
+			bc.log('new user', user)
 			user.save((err) => {
 				if (err) {
 					return done(err)
 				}
 				done(null, user)
+				bc.log('user saved', user)
 			})
-		} else {
-			console.error(err)
-			done(err)
 		}
 	})
 }))
@@ -85,8 +101,3 @@ passport.serializeUser(function (user, done) {
 passport.deserializeUser(function (user, done) {
 	done(null, user)
 })
-
-module.exports = function (app) {
-	app.use(passport.initialize())
-  return passport
-}

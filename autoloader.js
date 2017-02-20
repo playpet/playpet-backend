@@ -1,4 +1,5 @@
-const glob = require('glob')
+const glob = require('glob'),
+  bc = require('better-console')
 
 class Autoloader {
   constructor() {
@@ -6,6 +7,7 @@ class Autoloader {
   }
 
 	loadFile(filename, ...args) {
+    bc.log('requiring', filename)
 		let fn = require(filename)
 		if (typeof fn === 'function') {
 			fn(...args)
@@ -20,10 +22,10 @@ class Autoloader {
 		})
 	}
 
-	autoload(app, globArr) {
+	autoload(globArr, ...inject) {
 		globArr.forEach((dir) => {
 			this.loadDir(dir, filename => {
-        this.loadFile(filename, app)
+        this.loadFile(filename, ...inject)
       })
 		})
     return true

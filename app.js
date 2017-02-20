@@ -8,7 +8,7 @@ const express = require('express'),
   bc = require('better-console')
 
 autoloader.autoload(app, [
-  './src/lib/morgan.js',
+  './src/lib/middleware*.js',
   './src/controllers/*.js',
   './src/lib/oauth.js',
 ])

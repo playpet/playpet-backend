@@ -1,4 +1,6 @@
 const mongoose = require('mongoose'),
+  autoloader = require('autoloader'),
+  modelFiles = require('config/autoloader').modelFiles,
   bc = require('better-console')
 
 bc.log('Starting connection')
@@ -13,5 +15,7 @@ db.on('error', function() {
 db.once('open', function () {
   bc.log('MongoDB connected at mongodb://localhost/playpet')
 })
+
+autoloader.autoload(modelFiles)
 
 module.exports = db
