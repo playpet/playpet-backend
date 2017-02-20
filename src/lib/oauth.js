@@ -28,8 +28,8 @@ passport.use(new GoogleStrategy({
 		}
 
 		if (user) {
-      bc.log('user found,', user)
-    } else {
+			bc.log('user found,', user)
+		} else {
 			user = new User({
 				name: profile.displayName,
 				// TODO: make fallbacks for these, check their specs
@@ -60,38 +60,37 @@ passport.use(new GitHubStrategy({
 	clientSecret: secrets.github_oauth_secret,
 	callbackURL: authURL('github'),
 }, function (accessToken, refreshToken, profile, done) {
-  bc.log('after findOne', ...arguments)
-  if (err) {
-    bc.error(err)
-    done(err)
-  }
+	bc.log('after findOne', ...arguments)
+	if (err) {
+		bc.error(err)
+		done(err)
+	}
 
-  if (user) {
-    bc.log('user found,', user)
-  } else {
-			let user = new User({
-				name: profile.displayName,
-				// TODO: make fallbacks for these, check their specs
-				email: profile.emails[0].value,
-				profileImage: profile._json.avatar_url,
-				profiles: {
-					github: {
-						data: profile,
-						accessToken,
-						refreshToken,
-					}
-				},
-			})
-			bc.log('new user', user)
-			user.save((err) => {
-				if (err) {
-					return done(err)
+	if (user) {
+		bc.log('user found,', user)
+	} else {
+		let user = new User({
+			name: profile.displayName,
+			// TODO: make fallbacks for these, check their specs
+			email: profile.emails[0].value,
+			profileImage: profile._json.avatar_url,
+			profiles: {
+				github: {
+					data: profile,
+					accessToken,
+					refreshToken,
 				}
-				done(null, user)
-				bc.log('user saved', user)
-			})
-		}
-	})
+			},
+		})
+		bc.log('new user', user)
+		user.save((err) => {
+			if (err) {
+				return done(err)
+			}
+			done(null, user)
+			bc.log('user saved', user)
+		})
+	}
 }))
 
 passport.serializeUser(function (user, done) {

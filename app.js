@@ -7,11 +7,11 @@ const express = require('express'),
   port = 3000,
   bc = require('better-console')
 
-autoloader.autoload(app, [
+autoloader.autoload([
   './src/lib/middleware*.js',
   './src/controllers/*.js',
   './src/lib/oauth.js',
-])
+], app)
 
 bc.log('app config options: ', options)
 

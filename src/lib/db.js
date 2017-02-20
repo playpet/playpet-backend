@@ -1,7 +1,7 @@
 const mongoose = require('mongoose'),
   autoloader = require('autoloader'),
-  modelFiles = require('config/autoloader').modelFiles,
-  bc = require('better-console')
+  bc = require('better-console'),
+  path = require('path')
 
 bc.log('Starting connection')
 mongoose.connect('mongodb://localhost:27017/playpet')
@@ -16,6 +16,6 @@ db.once('open', function () {
   bc.log('MongoDB connected at mongodb://localhost/playpet')
 })
 
-autoloader.autoload(modelFiles)
+autoloader.autoload([path.resolve('../models/**/*.js')])
 
 module.exports = db
